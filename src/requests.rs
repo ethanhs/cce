@@ -2,7 +2,7 @@ use reqwest::Client;
 
 use compiler::Compiler;
 use language::Language;
-use source::{Output, Filters, Options, Source};
+use source::{Filters, Options, Output, Source};
 
 pub fn get_languages(client: Client) -> Vec<Language> {
     client
@@ -56,14 +56,14 @@ pub fn compile(client: Client, src: String, compiler: &str, args: String) -> Str
     let mut res = String::new();
     if output.code != 0 {
         for line in output.stderr {
-           res.push_str(&line.text);
+            res.push_str(&line.text);
             res.push('\n');
         }
     } else {
         for line in output.asm {
-           res.push_str(&line.text);
+            res.push_str(&line.text);
             res.push('\n');
         }
-    } 
+    }
     return res;
 }
