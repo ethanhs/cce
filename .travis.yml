@@ -16,21 +16,21 @@ matrix:
     - env: TARGET=aarch64-unknown-linux-gnu
     - env: TARGET=arm-unknown-linux-gnueabi
     - env: TARGET=armv7-unknown-linux-gnueabihf
-    - env: TARGET=i686-unknown-linux-gnu
-    - env: TARGET=i686-unknown-linux-musl
+    #- env: TARGET=i686-unknown-linux-gnu
+    #- env: TARGET=i686-unknown-linux-musl
     - env: TARGET=x86_64-unknown-linux-gnu
     - env: TARGET=x86_64-unknown-linux-musl
 
     # OSX
-    - env: TARGET=i686-apple-darwin
-      os: osx
+    #- env: TARGET=i686-apple-darwin
+    #  os: osx
     - env: TARGET=x86_64-apple-darwin
       os: osx
 
     # *BSD
-    - env: TARGET=i686-unknown-freebsd DISABLE_TESTS=1
-    - env: TARGET=x86_64-unknown-freebsd DISABLE_TESTS=1
-    - env: TARGET=x86_64-unknown-netbsd DISABLE_TESTS=1
+    #- env: TARGET=i686-unknown-freebsd DISABLE_TESTS=1
+    #- env: TARGET=x86_64-unknown-freebsd DISABLE_TESTS=1
+    #- env: TARGET=x86_64-unknown-netbsd DISABLE_TESTS=1
 
     # Testing other channels
     - env: TARGET=x86_64-unknown-linux-gnu
@@ -55,7 +55,16 @@ after_script: set +e
 before_deploy:
   - sh ci/before_deploy.sh
 
-# Deploy temporarily off
+deploy:
+  api_key:
+    secure: "JNW05Ra9OEx3YD81ZcsVnJRSh1a/umKWyK0ifo/+ZHYuQAr1vfg3a4K7UoLbRtYdQoNBOWCVgIiIw9z+F/G1UgC4Juo82OCW/AV0V5lG995mwEfyxaXrVGm/pp8NyB7J2vbSNSpjAf96ufe6VrVGKEu790f6hA/hSpayjrWUNRKh/3A2VZlmDV0u6veyazI4QNoaaQYEAtXIhRwyQUKx2yBUm6ltDXdrMIpXBn34Cu2/HbnlqqMjLgFJZRs8DNd1wks/A5uvkyiRoNqXcrHztfRttB+YJUyN/F17p5yXQpA2Y322ePSRHP26ifyk6junA3RvjZ57oPRqmEaD0zTLX/Mospao7aheo1XmSBabzywMR9C6yTD6/0RBRSdEJLC5uHarO7qcp+wRs/pchB0UTobLlq3S8R1UT3F7/zXiTpg4QsGP9x0PwgA+6MSdlXjmnnMj1fjPdEcAnCa27k/QzhrNl4G7L0TNF7T1YrFHmPEvosNd87IzGceLLTbJ6Z36kLLECF1BovurZwkDuwilY/av8jyHOLjcJoiNEPRINQe5ASKrZZJzNo9qlh5fUJkBlFaN92QIwExe2pPi2Fi68kglRvj84IYdwZ414fBRkTaSQ3IwyxnNH8dnMb3HC2cTNvwQQr75Fs8JQkiA0Vr/xvc9F1OQe6n+JbTnHpPpT/w="
+  file_glob: true
+  file: $CRATE_NAME-$TRAVIS_TAG-$TARGET.*
+  on:
+    condition: $TRAVIS_RUST_VERSION = stable
+    tags: true
+  provider: releases
+skip_cleanup: true
 
 cache: cargo
 before_cache:
