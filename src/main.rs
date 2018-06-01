@@ -52,7 +52,8 @@ fn main() {
                 )
                 .arg(
                     Arg::with_name("args")
-                        .takes_value(true)
+                        .multiple(true)
+                        .allow_hyphen_values(true)
                         .help(" arguments to pass to the compiler"),
                 ),
         )
@@ -78,7 +79,7 @@ fn main() {
     } else if let Some(matches) = matches.subcommand_matches("compile") {
         let src = edit_snippet();
         let compiler = matches.value_of("id").unwrap();
-        let args = matches.value_of("id").unwrap_or("").to_string();
+        let args = matches.value_of("args").unwrap_or("").to_string();
         let asm = compile(client, src, compiler, args);
         println!("Compiling with {} compiler outputs:", compiler);
         println!("");

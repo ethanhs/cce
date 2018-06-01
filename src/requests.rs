@@ -2,7 +2,7 @@ use reqwest::Client;
 
 use compiler::Compiler;
 use language::Language;
-use source::{Asm, Filters, Options, Source};
+use source::{Output, Filters, Options, Source};
 
 pub fn get_languages(client: Client) -> Vec<Language> {
     client
@@ -46,7 +46,7 @@ pub fn compile(client: Client, src: String, compiler: &str, args: String) -> Str
         source: src,
         options: options,
     };
-    let asm: Asm = client
+    let output: Output = client
         .post(format!("https://www.godbolt.org/api/compiler/{}/compile", &compiler).as_str())
         .json(&source)
         .send()
@@ -54,9 +54,16 @@ pub fn compile(client: Client, src: String, compiler: &str, args: String) -> Str
         .json()
         .unwrap();
     let mut res = String::new();
-    for line in asm.asm {
-        res.push_str(&line.text);
-        res.push('\n');
-    }
+    if output.code != 0 {
+        for line in output.stderr {
+           res.push_str(&line.text);
+            res.push('\n');
+        }
+    } else {
+        for line in output.asm {
+           res.push_str(&line.text);
+            res.push('\n');
+        }
+    } 
     return res;
 }

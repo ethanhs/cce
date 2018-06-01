@@ -26,6 +26,8 @@ pub struct Text {
 }
 
 #[derive(Serialize, Deserialize, Debug)]
-pub struct Asm {
+pub struct Output {
+    pub code: i32,
+    pub stderr: Vec<Text>,
     pub asm: Vec<Text>,
 }
