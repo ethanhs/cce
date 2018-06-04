@@ -4,6 +4,15 @@
 
 Do you love [Compiler Explorer](https://godbolt.org/)? Do you like the command line? Well this is the tool for you!
 
+## Building cce
+
+With a valid rust toolchain (I like [rustup.rs](https://rustup.rs/)) you can just
+```
+cargo build --release
+```
+
+And the binary should be located at `./target/release/cce`
+
 ## Using cce
 
 cce has 3 main operations:
