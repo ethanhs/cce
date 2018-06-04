@@ -16,7 +16,7 @@ mod source;
 mod tempedit;
 
 use requests::{compile, get_compilers, get_languages};
-use tempedit::edit_snippet;
+use tempedit::{edit_snippet, read_src};
 
 fn main() {
     let matches = App::new("cce - a command line interface to compiler explorer")
@@ -51,6 +51,11 @@ fn main() {
                         .required(true),
                 )
                 .arg(
+                    Arg::with_name("file")
+                        .takes_value(true)
+                        .help(" compile from the given source file"),
+                )
+                .arg(
                     Arg::with_name("args")
                         .multiple(true)
                         .allow_hyphen_values(true)
@@ -77,7 +82,10 @@ fn main() {
             }
         }
     } else if let Some(matches) = matches.subcommand_matches("compile") {
-        let src = edit_snippet();
+        let src = match matches.value_of("file") {
+            Some(path) => read_src(path),
+            None => edit_snippet(),
+        };
         let compiler = matches.value_of("id").unwrap();
         let args = matches.value_of("args").unwrap_or("").to_string();
         let asm = compile(client, src, compiler, args);

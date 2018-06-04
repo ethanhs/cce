@@ -108,6 +108,17 @@ main:
         ret
 ```
 
+You can also pass a file after the compiler ID:
+
+```
+~> cce compile g81 test.c
+Compiling with g81 compiler outputs:
+
+main:
+        mov     eax, 1
+        ret
+```
+
 The full help listing:
 
 ```

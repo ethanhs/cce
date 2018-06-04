@@ -36,3 +36,10 @@ pub fn edit_snippet() -> String {
     temp.read_to_string(&mut buf).unwrap();
     return buf;
 }
+
+pub fn read_src(path: &str) -> String {
+    let mut f = File::open(path).expect("file not found");
+    let mut src = String::new();
+    f.read_to_string(&mut src).expect("Failed to read file");
+    return src;
+}
