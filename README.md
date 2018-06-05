@@ -4,6 +4,8 @@
 
 Do you love [Compiler Explorer](https://godbolt.org/)? Do you like the command line? Well this is the tool for you!
 
+[![asciicast](https://asciinema.org/a/BZYVuPEebsbaUz3y0bpYZoudn.png)](https://asciinema.org/a/BZYVuPEebsbaUz3y0bpYZoudn)
+
 ## Building cce
 
 With a valid rust toolchain (I like [rustup.rs](https://rustup.rs/)) you can just
