@@ -7,6 +7,7 @@ extern crate serde_json;
 extern crate clap;
 extern crate hyper;
 extern crate reqwest;
+extern crate urlparse;
 
 use clap::{App, AppSettings, Arg, SubCommand};
 use hyper::header::{qitem, Accept, Headers, ContentType};
@@ -17,9 +18,11 @@ mod language;
 mod requests;
 mod source;
 mod tempedit;
+mod url;
 
 use requests::{compile, get_compilers, get_languages};
 use tempedit::{edit_snippet, read_src};
+use url::get_url;
 
 fn main() {
     let matches = App::new("cce - a command line interface to compiler explorer")
@@ -55,6 +58,11 @@ fn main() {
         .subcommand(
             SubCommand::with_name("compile")
                 .about("Compile a snippet on compiler explorer")
+                .arg(
+                    Arg::with_name("url")
+                        .long("url")
+                        .help("get an URL for given compilation")
+                )
                 .arg(
                     Arg::with_name("id")
                         .takes_value(true)
@@ -104,6 +112,10 @@ fn main() {
         };
         let compiler = matches.value_of("id").unwrap();
         let args = matches.value_of("args").unwrap_or("").to_string();
+        if matches.is_present("url") {
+            let url = get_url(&src, &host, &compiler, &args);
+            println!("URL: {}", url);
+        }
         let asm = compile(client, &host, src, compiler, args);
         println!("{}", asm);
     }
