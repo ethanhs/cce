@@ -89,8 +89,6 @@ fn main() {
         let compiler = matches.value_of("id").unwrap();
         let args = matches.value_of("args").unwrap_or("").to_string();
         let asm = compile(client, src, compiler, args);
-        println!("Compiling with {} compiler outputs:", compiler);
-        println!("");
         println!("{}", asm);
     }
 }
