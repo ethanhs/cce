@@ -45,7 +45,7 @@ fn main() {
                 .subcommand(SubCommand::with_name("langs").about(" list available languages."))
                 .subcommand(
                     SubCommand::with_name("compilers")
-                        .about(" list avaiable compilers")
+                        .about(" list available compilers")
                         .arg(
                             Arg::with_name("language")
                                 .short("l")
