@@ -1,12 +1,15 @@
 #[macro_use]
 extern crate serde_derive;
 
+#[macro_use]
+extern crate serde_json;
+
 extern crate clap;
 extern crate hyper;
 extern crate reqwest;
 
 use clap::{App, AppSettings, Arg, SubCommand};
-use hyper::header::{qitem, Accept, Headers};
+use hyper::header::{qitem, Accept, Headers, ContentType};
 use hyper::mime;
 
 mod compiler;
@@ -73,6 +76,8 @@ fn main() {
         .get_matches();
     let mut headers = Headers::new();
     headers.set(Accept(vec![qitem(mime::APPLICATION_JSON)]));
+    headers.set(ContentType(mime::APPLICATION_JSON));
+
     let client = reqwest::Client::builder()
         .default_headers(headers)
         .build()

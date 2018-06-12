@@ -2,7 +2,7 @@ use reqwest::Client;
 
 use compiler::Compiler;
 use language::Language;
-use source::{Filters, Options, Output, Source};
+use source::Output;
 
 pub fn get_languages(client: Client, host: &str) -> Vec<Language> {
     client.get(format!("{}/api/languages", host).as_str())
@@ -30,28 +30,34 @@ pub fn get_compilers(client: Client, host: &str, language: Option<&str>) -> Vec<
 }
 
 pub fn compile(client: Client, host: &str, src: String, compiler: &str, args: String) -> String {
-    let filters = Filters {
-        intel: true,
-        demangle: true,
-        directives: true,
-        comments: true,
-        labels: true,
-    };
-    let options = Options {
-        userArguments: args,
-        filters: filters,
-    };
-    let source = Source {
-        source: src,
-        options: options,
-    };
-    let output: Output = client
+    let filters = json!(
+        {
+            "intel": true,
+            "demangle": true,
+            "directives": true,
+            "comments": true,
+            "labels": true
+        }
+    );
+
+    let options = json!({
+        "userArguments": args,
+        "filters": filters
+    });
+
+    let source = json!({
+        "source": src,
+        "options": options
+    });
+
+    let output : Output =  client
         .post(format!("{}/api/compiler/{}/compile", host, &compiler).as_str())
-        .json(&source)
+        .body(source.to_string())
         .send()
         .unwrap()
         .json()
         .unwrap();
+
     let mut res = String::new();
     if output.code != 0 {
         for line in output.stderr {
