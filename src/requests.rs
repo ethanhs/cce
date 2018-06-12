@@ -4,25 +4,24 @@ use compiler::Compiler;
 use language::Language;
 use source::{Filters, Options, Output, Source};
 
-pub fn get_languages(client: Client) -> Vec<Language> {
-    client
-        .get("https://www.godbolt.org/api/languages")
+pub fn get_languages(client: Client, host: &str) -> Vec<Language> {
+    client.get(format!("{}/api/languages", host).as_str())
         .send()
         .expect("Failed to commit transaction in get_languages")
         .json()
         .expect("Failed to parse JSON in get_languages")
 }
 
-pub fn get_compilers(client: Client, language: Option<&str>) -> Vec<Compiler> {
+pub fn get_compilers(client: Client, host: &str, language: Option<&str>) -> Vec<Compiler> {
     match language {
         Some(lang) => client
-            .get(format!("https://www.godbolt.org/api/compilers/{}", lang).as_str())
+            .get(format!("{}/api/compilers/{}", host, lang).as_str())
             .send()
             .unwrap()
             .json()
             .unwrap(),
         None => client
-            .get("https://www.godbolt.org/api/compilers/")
+            .get(format!("{}/api/compilers/", host).as_str())
             .send()
             .unwrap()
             .json()
@@ -30,7 +29,7 @@ pub fn get_compilers(client: Client, language: Option<&str>) -> Vec<Compiler> {
     }
 }
 
-pub fn compile(client: Client, src: String, compiler: &str, args: String) -> String {
+pub fn compile(client: Client, host: &str, src: String, compiler: &str, args: String) -> String {
     let filters = Filters {
         intel: true,
         demangle: true,
@@ -47,7 +46,7 @@ pub fn compile(client: Client, src: String, compiler: &str, args: String) -> Str
         options: options,
     };
     let output: Output = client
-        .post(format!("https://www.godbolt.org/api/compiler/{}/compile", &compiler).as_str())
+        .post(format!("{}/api/compiler/{}/compile", host, &compiler).as_str())
         .json(&source)
         .send()
         .unwrap()

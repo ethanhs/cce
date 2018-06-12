@@ -24,6 +24,14 @@ fn main() {
         .author("Ethan Smith")
         .about("Input C++, C, Rust, Haskell, Swift, etc, get assembly")
         .setting(AppSettings::SubcommandRequiredElseHelp)
+        .arg(
+            Arg::with_name("host")
+                .long("host")
+                .takes_value(true)
+                .default_value("https://godbolt.org")
+                .help(" specify the Compiler Explorer host")
+        )
+
         .subcommand(
             SubCommand::with_name("list")
                 .about("List the compilers and languages available on compiler explorer")
@@ -69,14 +77,17 @@ fn main() {
         .default_headers(headers)
         .build()
         .unwrap();
+    let host = matches.value_of("host").unwrap();
+
     if let Some(matches) = matches.subcommand_matches("list") {
         if let Some(_matches) = matches.subcommand_matches("langs") {
-            let langs = get_languages(client);
+            let langs = get_languages(client, &host);
+
             for lang in langs {
                 println!("{}", lang.id);
             }
         } else if let Some(matches) = matches.subcommand_matches("compilers") {
-            let compilers = get_compilers(client, matches.value_of("language"));
+            let compilers = get_compilers(client, &host, matches.value_of("language"));
             for compiler in compilers {
                 println!("{}", compiler);
             }
@@ -88,7 +99,7 @@ fn main() {
         };
         let compiler = matches.value_of("id").unwrap();
         let args = matches.value_of("args").unwrap_or("").to_string();
-        let asm = compile(client, src, compiler, args);
+        let asm = compile(client, &host, src, compiler, args);
         println!("{}", asm);
     }
 }
