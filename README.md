@@ -121,20 +121,25 @@ main:
         ret
 ```
 
+And you can also get an URL for the compilation job:
+```
+~> cce compile --url g81 test.c
+URL: https://godbolt.org/#%7B%22content%22%3A%5B%7B%22content%22%3A%5B%7B%22componentName%22%3A%22codeEditor%22%2C%22componentState%22%3A%7B%22id%22%3A1%2C%22options%22%3A%7B%22colouriseAsm%22%3Atrue%2C%22compileOnChange%22%3Atrue%7D%2C%22source%22%3A%22%22%7D%2C%22type%22%3A%22component%22%7D%2C%7B%22componentName%22%3A%22compiler%22%2C%22componentState%22%3A%7B%22compiler%22%3A%22g81%22%2C%22filters%22%3A%7B%22commentOnly%22%3Atrue%2C%22directives%22%3Atrue%2C%22intel%22%3Atrue%2C%22labels%22%3Atrue%2C%22trim%22%3Atrue%7D%2C%22options%22%3A%22%22%2C%22source%22%3A1%7D%2C%22type%22%3A%22component%22%7D%5D%2C%22type%22%3A%22row%22%7D%5D%2C%22version%22%3A4%7D
+```
+
 The full help listing:
 
 ```
 cce - a command line interface to compiler explorer 0.1.0
 Ethan Smith
 Input C++, C, Rust, Haskell, Swift, etc, get assembly
-
 USAGE:
-    cce <SUBCOMMAND>
-
+    cce [OPTIONS] <SUBCOMMAND>
 FLAGS:
     -h, --help       Prints help information
     -V, --version    Prints version information
-
+OPTIONS:
+        --host <host>     specify the Compiler Explorer host [default: https://godbolt.org]
 SUBCOMMANDS:
     compile    Compile a snippet on compiler explorer
     help       Prints this message or the help of the given subcommand(s)
