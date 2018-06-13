@@ -3,6 +3,16 @@ use std::fs::{create_dir, File};
 use std::io::Read;
 use std::process::Command;
 
+#[cfg(target_os = "macos")]
+#[cfg(target_os = "linux")]
+fn default_editor() -> String {
+    String::from("vim")
+}
+#[cfg(target_os = "windows")]
+fn default_editor() -> String {
+    String::from("notepad")
+}
+
 pub fn edit_snippet() -> String {
     let home = env::home_dir().expect("Fatal: unable to find home directory");
     let home_dir = home.as_path().join(".godboltc");
@@ -23,14 +33,14 @@ pub fn edit_snippet() -> String {
         Some(edit) => edit,
         None => match env::var("EDITOR").ok() {
             Some(edit) => edit,
-            None => String::from("nvim"),
+            None => default_editor(),            
         },
     };
 
     Command::new(editor)
         .arg(godboltc.to_str().unwrap())
         .status()
-        .expect("Failed to open editor, please set $VISUAL or $EDITOR.");
+        .expect("Failed to open editor");
 
     let mut buf = String::new();
     temp.read_to_string(&mut buf).unwrap();
@@ -38,7 +48,7 @@ pub fn edit_snippet() -> String {
 }
 
 pub fn read_src(path: &str) -> String {
-    let mut f = File::open(path).expect("file not found");
+    let mut f = File::open(path).expect(format!("could not find file {}", path).as_str());
     let mut src = String::new();
     f.read_to_string(&mut src).expect("Failed to read file");
     return src;
