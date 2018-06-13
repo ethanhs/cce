@@ -140,3 +140,8 @@ SUBCOMMANDS:
     help       Prints this message or the help of the given subcommand(s)
     list       List the compilers and languages available on compiler explorer
 ```
+
+### License
+
+This project is under the MIT license. By contributing, you agree to license your
+work under the MIT license. See LICENSE for more.

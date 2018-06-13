@@ -2,6 +2,7 @@
 name = "cce"
 version = "0.1.0"
 authors = ["Ethan Smith <ethan@ethanhs.me>"]
+license = "MIT"
 
 [dependencies]
 reqwest = "0.8.5"
