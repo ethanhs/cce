@@ -3,8 +3,7 @@ use std::fs::{create_dir, File};
 use std::io::Read;
 use std::process::Command;
 
-#[cfg(target_os = "macos")]
-#[cfg(target_os = "linux")]
+#[cfg(unix)]
 fn default_editor() -> String {
     String::from("vim")
 }
