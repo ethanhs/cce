@@ -1,12 +1,16 @@
 #[macro_use]
 extern crate serde_derive;
 
+#[macro_use]
+extern crate serde_json;
+
 extern crate clap;
 extern crate hyper;
 extern crate reqwest;
+extern crate urlparse;
 
 use clap::{App, AppSettings, Arg, SubCommand};
-use hyper::header::{qitem, Accept, Headers};
+use hyper::header::{qitem, Accept, Headers, ContentType};
 use hyper::mime;
 
 mod compiler;
@@ -14,9 +18,11 @@ mod language;
 mod requests;
 mod source;
 mod tempedit;
+mod url;
 
 use requests::{compile, get_compilers, get_languages};
 use tempedit::{edit_snippet, read_src};
+use url::get_url;
 
 fn main() {
     let matches = App::new("cce - a command line interface to compiler explorer")
@@ -24,6 +30,14 @@ fn main() {
         .author("Ethan Smith")
         .about("Input C++, C, Rust, Haskell, Swift, etc, get assembly")
         .setting(AppSettings::SubcommandRequiredElseHelp)
+        .arg(
+            Arg::with_name("host")
+                .long("host")
+                .takes_value(true)
+                .default_value("https://godbolt.org")
+                .help(" specify the Compiler Explorer host")
+        )
+
         .subcommand(
             SubCommand::with_name("list")
                 .about("List the compilers and languages available on compiler explorer")
@@ -31,7 +45,7 @@ fn main() {
                 .subcommand(SubCommand::with_name("langs").about(" list available languages."))
                 .subcommand(
                     SubCommand::with_name("compilers")
-                        .about(" list avaiable compilers")
+                        .about(" list available compilers")
                         .arg(
                             Arg::with_name("language")
                                 .short("l")
@@ -44,6 +58,11 @@ fn main() {
         .subcommand(
             SubCommand::with_name("compile")
                 .about("Compile a snippet on compiler explorer")
+                .arg(
+                    Arg::with_name("url")
+                        .long("url")
+                        .help("get an URL for given compilation")
+                )
                 .arg(
                     Arg::with_name("id")
                         .takes_value(true)
@@ -65,18 +84,23 @@ fn main() {
         .get_matches();
     let mut headers = Headers::new();
     headers.set(Accept(vec![qitem(mime::APPLICATION_JSON)]));
+    headers.set(ContentType(mime::APPLICATION_JSON));
+
     let client = reqwest::Client::builder()
         .default_headers(headers)
         .build()
         .unwrap();
+    let host = matches.value_of("host").unwrap();
+
     if let Some(matches) = matches.subcommand_matches("list") {
         if let Some(_matches) = matches.subcommand_matches("langs") {
-            let langs = get_languages(client);
+            let langs = get_languages(client, &host);
+
             for lang in langs {
                 println!("{}", lang.id);
             }
         } else if let Some(matches) = matches.subcommand_matches("compilers") {
-            let compilers = get_compilers(client, matches.value_of("language"));
+            let compilers = get_compilers(client, &host, matches.value_of("language"));
             for compiler in compilers {
                 println!("{}", compiler);
             }
@@ -88,7 +112,11 @@ fn main() {
         };
         let compiler = matches.value_of("id").unwrap();
         let args = matches.value_of("args").unwrap_or("").to_string();
-        let asm = compile(client, src, compiler, args);
+        if matches.is_present("url") {
+            let url = get_url(&src, &host, &compiler, &args);
+            println!("URL: {}", url);
+        }
+        let asm = compile(client, &host, src, compiler, args);
         println!("{}", asm);
     }
 }
