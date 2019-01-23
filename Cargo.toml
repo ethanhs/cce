@@ -5,6 +5,7 @@ authors = ["Ethan Smith <ethan@ethanhs.me>"]
 license = "MIT"
 
 [dependencies]
+dirs = "1.0"
 reqwest = "0.8.5"
 hyper = "*"
 serde = "1.0"
