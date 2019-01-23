@@ -101,17 +101,23 @@ fn main() {
                 println!("{}", lang.id);
             }
         } else if let Some(matches) = matches.subcommand_matches("compilers") {
-            let compilers = get_compilers(client, &host, matches.value_of("language"));
+            let compilers = get_compilers(&client, &host, matches.value_of("language"));
             for compiler in compilers {
                 println!("{}", compiler);
             }
         }
     } else if let Some(matches) = matches.subcommand_matches("compile") {
+        let all_compilers = get_compilers(&client, &host, None);
+        let compiler = matches.value_of("id").unwrap();
+        let valid_id = all_compilers.iter().any(|c| c.id == compiler);
+        if ! valid_id {
+            println!("Not a valid compiler id! Run cce list compilers [lang]");
+            std::process::exit(1)
+        }
         let src = match matches.value_of("file") {
             Some(path) => read_src(path),
             None => edit_snippet(),
         };
-        let compiler = matches.value_of("id").unwrap();
         let args = matches.value_of("args").unwrap_or("").to_string();
         if matches.is_present("url") {
             let url = get_url(&src, &host, &compiler, &args);
