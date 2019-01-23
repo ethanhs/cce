@@ -31,7 +31,7 @@ pub fn get_url(src: &String, host: &str, compiler: &str, args: &String) -> Strin
                 "options": args,
                 "compiler": compiler,
             }
-        }    
+        }
     );
 
     let url_parameters = json!({

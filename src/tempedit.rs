@@ -3,6 +3,8 @@ use std::fs::{create_dir, File};
 use std::io::Read;
 use std::process::Command;
 
+use dirs;
+
 #[cfg(unix)]
 fn default_editor() -> String {
     String::from("vim")
@@ -13,7 +15,7 @@ fn default_editor() -> String {
 }
 
 pub fn edit_snippet() -> String {
-    let home = env::home_dir().expect("Fatal: unable to find home directory");
+    let home = dirs::home_dir().expect("Fatal: user needs home directory");
     let home_dir = home.as_path().join(".godboltc");
     let godboltc = home_dir.as_path();
     if !godboltc.exists() || !godboltc.is_dir() {
@@ -32,7 +34,7 @@ pub fn edit_snippet() -> String {
         Some(edit) => edit,
         None => match env::var("EDITOR").ok() {
             Some(edit) => edit,
-            None => default_editor(),            
+            None => default_editor(),
         },
     };
 

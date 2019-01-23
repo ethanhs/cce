@@ -5,6 +5,7 @@ extern crate serde_derive;
 extern crate serde_json;
 
 extern crate clap;
+extern crate dirs;
 extern crate hyper;
 extern crate reqwest;
 extern crate urlparse;
