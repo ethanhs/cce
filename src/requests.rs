@@ -12,7 +12,7 @@ pub fn get_languages(client: Client, host: &str) -> Vec<Language> {
         .expect("Failed to parse JSON in get_languages")
 }
 
-pub fn get_compilers(client: Client, host: &str, language: Option<&str>) -> Vec<Compiler> {
+pub fn get_compilers(client: &Client, host: &str, language: Option<&str>) -> Vec<Compiler> {
     match language {
         Some(lang) => client
             .get(format!("{}/api/compilers/{}", host, lang).as_str())
