@@ -1,8 +1,8 @@
 use reqwest::Client;
 
-use compiler::Compiler;
-use language::Language;
-use source::Output;
+use crate::compiler::Compiler;
+use crate::language::Language;
+use crate::source::Output;
 
 pub fn get_languages(client: Client, host: &str) -> Vec<Language> {
     client.get(format!("{}/api/languages", host).as_str())

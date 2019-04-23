@@ -3,6 +3,7 @@ name = "cce"
 version = "0.1.0"
 authors = ["Ethan Smith <ethan@ethanhs.me>"]
 license = "MIT"
+edition = "2018"
 
 [dependencies]
 dirs = "1.0"
