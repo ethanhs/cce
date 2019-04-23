@@ -6,13 +6,10 @@ extern crate serde_json;
 
 extern crate clap;
 extern crate dirs;
-extern crate hyper;
 extern crate reqwest;
 extern crate urlparse;
 
 use clap::{App, AppSettings, Arg, SubCommand};
-use hyper::header::{qitem, Accept, Headers, ContentType};
-use hyper::mime;
 
 mod compiler;
 mod language;
@@ -22,6 +19,7 @@ mod tempedit;
 mod url;
 
 use requests::{compile, get_compilers, get_languages};
+use reqwest::header::HeaderMap;
 use tempedit::{edit_snippet, read_src};
 use url::get_url;
 
@@ -83,9 +81,9 @@ fn main() {
                 ),
         )
         .get_matches();
-    let mut headers = Headers::new();
-    headers.set(Accept(vec![qitem(mime::APPLICATION_JSON)]));
-    headers.set(ContentType(mime::APPLICATION_JSON));
+    let mut headers = HeaderMap::new();
+    headers.insert("ACCEPT", "application/json".parse().unwrap());
+    headers.insert("ContentType", "application/json".parse().unwrap());
 
     let client = reqwest::Client::builder()
         .default_headers(headers)
