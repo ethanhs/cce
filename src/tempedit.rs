@@ -24,7 +24,8 @@ pub fn edit_snippet() -> String {
     let main = godboltc.join("main");
     let godboltc = main.as_path();
     if !godboltc.exists() || !godboltc.is_file() {
-        File::create(&godboltc).unwrap_or_else(|_| panic!("Could not create file {}", godboltc.to_str().unwrap()));
+        File::create(&godboltc)
+            .unwrap_or_else(|_| panic!("Could not create file {}", godboltc.to_str().unwrap()));
     }
     let mut temp = File::open(&godboltc).expect("Unable to create temp file");
     let editor = match env::var("VISUAL").ok() {
