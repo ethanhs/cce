@@ -29,9 +29,8 @@ fn main() {
                 .long("host")
                 .takes_value(true)
                 .default_value("https://godbolt.org")
-                .help(" specify the Compiler Explorer host")
+                .help(" specify the Compiler Explorer host"),
         )
-
         .subcommand(
             SubCommand::with_name("list")
                 .about("List the compilers and languages available on compiler explorer")
@@ -55,7 +54,7 @@ fn main() {
                 .arg(
                     Arg::with_name("url")
                         .long("url")
-                        .help("get an URL for given compilation")
+                        .help("get an URL for given compilation"),
                 )
                 .arg(
                     Arg::with_name("id")
@@ -103,7 +102,7 @@ fn main() {
         let all_compilers = get_compilers(&client, &host, None);
         let compiler = matches.value_of("id").unwrap();
         let valid_id = all_compilers.iter().any(|c| c.id == compiler);
-        if ! valid_id {
+        if !valid_id {
             println!("Not a valid compiler id! Run cce list compilers [lang]");
             std::process::exit(1)
         }

@@ -5,7 +5,8 @@ use crate::language::Language;
 use crate::source::Output;
 
 pub fn get_languages(client: Client, host: &str) -> Vec<Language> {
-    client.get(format!("{}/api/languages", host).as_str())
+    client
+        .get(format!("{}/api/languages", host).as_str())
         .send()
         .expect("Failed to commit transaction in get_languages")
         .json()
@@ -50,7 +51,7 @@ pub fn compile(client: Client, host: &str, src: String, compiler: &str, args: St
         "options": options
     });
 
-    let output : Output =  client
+    let output: Output = client
         .post(format!("{}/api/compiler/{}/compile", host, &compiler).as_str())
         .body(source.to_string())
         .send()

@@ -2,18 +2,18 @@ use urlparse::quote;
 
 pub fn get_url(src: &String, host: &str, compiler: &str, args: &String) -> String {
     let codeeditor = json!(
-        {
-            "type": "component",
-            "componentName": "codeEditor",
-            "componentState": {
-                "id": 1,
-                "source": src,
-                "options": {
-                    "compileOnChange": true,
-                    "colouriseAsm": true
-                },
-            }
-        });
+    {
+        "type": "component",
+        "componentName": "codeEditor",
+        "componentState": {
+            "id": 1,
+            "source": src,
+            "options": {
+                "compileOnChange": true,
+                "colouriseAsm": true
+            },
+        }
+    });
 
     let compilerstate = json!(
         {
@@ -46,5 +46,9 @@ pub fn get_url(src: &String, host: &str, compiler: &str, args: &String) -> Strin
             }
         ]
     });
-    format!("{}/#{}", host, quote(url_parameters.to_string(), b"").unwrap())
+    format!(
+        "{}/#{}",
+        host,
+        quote(url_parameters.to_string(), b"").unwrap()
+    )
 }
