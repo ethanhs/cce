@@ -1,6 +1,6 @@
 use urlparse::quote;
 
-pub fn get_url(src: &String, host: &str, compiler: &str, args: &String) -> String {
+pub fn get_url(src: &str, host: &str, compiler: &str, args: &str) -> String {
     let codeeditor = json!(
     {
         "type": "component",

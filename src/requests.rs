@@ -71,5 +71,5 @@ pub fn compile(client: Client, host: &str, src: String, compiler: &str, args: St
             res.push('\n');
         }
     }
-    return res;
+    res
 }

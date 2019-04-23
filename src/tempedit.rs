@@ -24,10 +24,7 @@ pub fn edit_snippet() -> String {
     let main = godboltc.join("main");
     let godboltc = main.as_path();
     if !godboltc.exists() || !godboltc.is_file() {
-        File::create(&godboltc).expect(&format!(
-            "Could not create file {}",
-            godboltc.to_str().unwrap()
-        ));
+        File::create(&godboltc).unwrap_or_else(|_| panic!("Could not create file {}", godboltc.to_str().unwrap()));
     }
     let mut temp = File::open(&godboltc).expect("Unable to create temp file");
     let editor = match env::var("VISUAL").ok() {
@@ -45,12 +42,12 @@ pub fn edit_snippet() -> String {
 
     let mut buf = String::new();
     temp.read_to_string(&mut buf).unwrap();
-    return buf;
+    buf
 }
 
 pub fn read_src(path: &str) -> String {
-    let mut f = File::open(path).expect(format!("could not find file {}", path).as_str());
+    let mut f = File::open(path).unwrap_or_else(|_| panic!("could not find file {}", path));
     let mut src = String::new();
     f.read_to_string(&mut src).expect("Failed to read file");
-    return src;
+    src
 }
