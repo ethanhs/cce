@@ -4,6 +4,8 @@ extern crate serde_derive;
 #[macro_use]
 extern crate serde_json;
 
+extern crate open;
+
 use clap::{App, AppSettings, Arg, SubCommand};
 
 mod compiler;
@@ -55,6 +57,11 @@ fn main() {
                     Arg::with_name("url")
                         .long("url")
                         .help("get an URL for given compilation"),
+                )
+                .arg(
+                    Arg::with_name("open")
+                        .long("open")
+                        .help("open the result in a browser"),
                 )
                 .arg(
                     Arg::with_name("id")
@@ -114,6 +121,13 @@ fn main() {
         if matches.is_present("url") {
             let url = get_url(&src, &host, &compiler, &args);
             println!("URL: {}", url);
+        }
+        if matches.is_present("open") {
+            let url = get_url(&src, &host, &compiler, &args);
+            match open::that(url) {
+                Ok(_) => println!("Opened result in browser"),
+                Err(_e) => println!("Failed to open the compilation in the browser."),
+            };
         }
         let asm = compile(client, &host, src, compiler, args);
         println!("{}", asm);
