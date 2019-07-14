@@ -15,7 +15,7 @@ mod source;
 mod tempedit;
 mod url;
 
-use requests::{compile, get_compilers, get_languages};
+use requests::{compile, get_compilers, get_languages, shorten};
 use reqwest::header::HeaderMap;
 use tempedit::{edit_snippet, read_src};
 use url::get_url;
@@ -62,6 +62,11 @@ fn main() {
                     Arg::with_name("open")
                         .long("open")
                         .help("open the result in a browser"),
+                )
+                .arg(
+                    Arg::with_name("shorten")
+                        .long("shorten")
+                        .help("Shorten the link. Implies '--url'"),
                 )
                 .arg(
                     Arg::with_name("id")
@@ -118,6 +123,17 @@ fn main() {
             None => edit_snippet(),
         };
         let args = matches.value_of("args").unwrap_or("").to_string();
+        if matches.is_present("shorten") {
+            let url = shorten(client, &host, src, compiler, args);
+            println!("URL: {}", url);
+            if matches.is_present("open") {
+                match open::that(url) {
+                    Ok(_) => println!("Opened result in browser"),
+                    Err(_e) => println!("Failed to open the compilation in the browser."),
+                };
+            }
+            return; // Shorten already triggers a compile.
+        }
         if matches.is_present("url") {
             let url = get_url(&src, &host, &compiler, &args);
             println!("URL: {}", url);

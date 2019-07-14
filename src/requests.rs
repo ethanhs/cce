@@ -4,6 +4,11 @@ use crate::compiler::Compiler;
 use crate::language::Language;
 use crate::source::Output;
 
+#[derive(Deserialize)]
+struct Url {
+    url: String,
+}
+
 pub fn get_languages(client: Client, host: &str) -> Vec<Language> {
     client
         .get(format!("{}/api/languages", host).as_str())
@@ -72,4 +77,76 @@ pub fn compile(client: Client, host: &str, src: String, compiler: &str, args: St
         }
     }
     res
+}
+
+/// Send data to Compiler Explorer and shortens it. This may be used when the to be compiled sources are too large to fit into the URL.
+/// Returns the shortened URL
+pub fn shorten(client: Client, host: &str, src: String, compiler: &str, args: String) -> String {
+    // Find language based on compiler.
+    let compilers = get_compilers(&client.clone(), host, None);
+    let language: String = compilers
+        .iter()
+        .find(|&x| x.id == compiler)
+        .map_or("c++".to_string(), |c| c.lang.clone());
+
+    let source = json!(
+        { "sessions": [
+            {
+                "id": 1,
+                "language": language,
+                "source": src,
+                "compilers": [{"id": &compiler,"options": args}]
+            }
+        ]}
+    );
+
+    let response = client
+        .post(format!("{}/shortener", host).as_str())
+        .json(&source)
+        .send();
+
+    let mut output_posted = match response {
+        Ok(output_posted) => output_posted,
+        Err(e) => return format!("Error sending: {}", e),
+    };
+
+    let output: Url = match output_posted.json() {
+        Ok(output) => output,
+        Err(e) => {
+            return format!(
+                "Error decoding result: {} {}",
+                e,
+                output_posted.text().unwrap()
+            )
+        }
+    };
+
+    return output.url;
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use reqwest::header::HeaderMap;
+
+    fn setup_client() -> reqwest::Client {
+        let mut headers = HeaderMap::new();
+        headers.insert("ACCEPT", "application/json".parse().unwrap());
+        headers.insert("ContentType", "application/json".parse().unwrap());
+
+        let client = reqwest::Client::builder()
+            .default_headers(headers)
+            .build()
+            .unwrap();
+        return client;
+    }
+
+    #[test]
+    fn test_shorten() {
+        let client = setup_client();
+        let src: String = "int main() { return 0; }".to_string();
+        let result = shorten(client, "https://godbolt.org", src, "g91", "-O1".to_string());
+        assert_eq!(result, "https://godbolt.org/z/CJ1Nvy".to_string());
+    }
+
 }
