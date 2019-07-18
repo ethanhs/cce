@@ -120,8 +120,7 @@ pub fn shorten(client: Client, host: &str, src: String, compiler: &str, args: St
             )
         }
     };
-
-    return output.url;
+    output.url
 }
 
 #[cfg(test)]
