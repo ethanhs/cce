@@ -58,7 +58,7 @@ pub fn compile(client: Client, host: &str, src: String, compiler: &str, args: St
 
     let output: Output = client
         .post(format!("{}/api/compiler/{}/compile", host, &compiler).as_str())
-        .body(source.to_string())
+        .json(&source)
         .send()
         .unwrap()
         .json()
