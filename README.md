@@ -1,6 +1,6 @@
 # cce - command line compiler explorer
 
-![Travis](https://img.shields.io/travis/ethanhs/cce.svg?style=flat-square) | ![Appveyor](https://img.shields.io/appveyor/ci/ethanhs/cce.svg?style=flat-square)
+[![Travis](https://img.shields.io/travis/ethanhs/cce.svg?style=flat-square)](https://travis-ci.org/ethanhs/cce) | [![Appveyor](https://img.shields.io/appveyor/ci/ethanhs/cce.svg?style=flat-square)](https://ci.appveyor.com/project/ethanhs/cce)
 
 Do you love [Compiler Explorer](https://godbolt.org/)? Do you like the command line? Well this is the tool for you!
 
