@@ -4,7 +4,7 @@
 
 Do you love [Compiler Explorer](https://godbolt.org/)? Do you like the command line? Well this is the tool for you!
 
-[![asciicast](https://asciinema.org/a/BZYVuPEebsbaUz3y0bpYZoudn.png)](https://asciinema.org/a/BZYVuPEebsbaUz3y0bpYZoudn)
+[![asciicast](https://asciinema.org/a/lRhuNuTp33d8i2aMwhdNVd8ON.svg)](https://asciinema.org/a/lRhuNuTp33d8i2aMwhdNVd8ON)
 
 ## Building cce
 
