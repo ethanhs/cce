@@ -6,6 +6,17 @@ Do you love [Compiler Explorer](https://godbolt.org/)? Do you like the command l
 
 [![asciicast](https://asciinema.org/a/lRhuNuTp33d8i2aMwhdNVd8ON.svg)](https://asciinema.org/a/lRhuNuTp33d8i2aMwhdNVd8ON)
 
+
+## Installing cce
+
+With a valid rust toolchain (I like [rustup.rs](https://rustup.rs/)) you can just
+
+```
+cargo install cce
+```
+
+And you will have a globally available cce binary available.
+
 ## Building cce
 
 With a valid rust toolchain (I like [rustup.rs](https://rustup.rs/)) you can just
