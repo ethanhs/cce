@@ -1,4 +1,4 @@
-use reqwest::Client;
+use reqwest::blocking::Client;
 
 use crate::compiler::Compiler;
 use crate::language::Language;
@@ -105,18 +105,19 @@ pub fn shorten(client: Client, host: &str, src: String, compiler: &str, args: St
         .json(&source)
         .send();
 
-    let mut output_posted = match response {
+    let output_posted = match response {
         Ok(output_posted) => output_posted,
         Err(e) => return format!("Error sending: {}", e),
     };
 
-    let output: Url = match output_posted.json() {
+    let json_posted = output_posted.json();
+
+    let output: Url = match json_posted {
         Ok(output) => output,
         Err(e) => {
             return format!(
-                "Error decoding result: {} {}",
-                e,
-                output_posted.text().unwrap()
+                "Error decoding result: {}",
+                e
             )
         }
     };

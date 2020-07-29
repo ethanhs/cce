@@ -91,7 +91,7 @@ fn main() {
     headers.insert("ACCEPT", "application/json".parse().unwrap());
     headers.insert("ContentType", "application/json".parse().unwrap());
 
-    let client = reqwest::Client::builder()
+    let client = reqwest::blocking::Client::builder()
         .default_headers(headers)
         .build()
         .unwrap();
